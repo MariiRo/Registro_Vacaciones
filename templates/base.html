@@ -1,0 +1,43 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Registro de Vacaciones{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'vacaciones:lista' %}">Vacaciones</a>
+        <div class="ms-auto">
+            {% if user.is_authenticated %}
+                <span class="text-white me-2">{{ user.username }}</span>
+                <a class="btn btn-sm btn-outline-light" href="{% url 'vacaciones:crear' %}">Nueva solicitud</a>
+                <form method="post" action="{% url 'logout' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-light">Salir</button>
+                </form>
+            {% else %}
+                <a class="btn btn-sm btn-outline-light" href="{% url 'login' %}">Ingresar</a>
+                <a class="btn btn-sm btn-outline-light" href="{% url 'usuarios:registro' %}">Registrarse</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+    {% block content %}{% endblock %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>  
+
+
+
+
+
+</body>
+</html>
