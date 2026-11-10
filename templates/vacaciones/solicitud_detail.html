@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Solicitud de {{ solicitud.empleado.username }}</h1>
+<p>Tipo: {{ solicitud.tipo.nombre }}</p>
+<p>Desde: {{ solicitud.fecha_inicio }}</p>
+<p>Hasta: {{ solicitud.fecha_fin }}</p>
+<p>Días totales: {{ solicitud.dias_totales }}</p>
+<p>Estado: {{ solicitud.get_estado_display }}</p>
+<p>Motivo: {{ solicitud.motivo }}</p>
+
+<h3>Compañeros asignados</h3>
+<ul>
+    {% for companero in solicitud.companeros_asignados.all %}
+        <li>{{ companero.username }}</li>
+    {% empty %}
+        <li>Sin compañeros asignados.</li>
+    {% endfor %}
+</ul>
+
+{% if user == solicitud.empleado %}
+    <a class="btn btn-warning" href="{% url 'vacaciones:editar' solicitud.pk %}">Editar</a>
+    <a class="btn btn-danger" href="{% url 'vacaciones:eliminar' solicitud.pk %}">Eliminar</a>
+{% endif %}
+
+<h3>Comentarios</h3>
+{% for comentario in solicitud.comentarios.all %}
+    <div class="border rounded p-2 mb-2">
+        <strong>{{ comentario.autor.username }}</strong>
+        <p>{{ comentario.texto }}</p>
+    </div>
+{% empty %}
+    <p>Sin comentarios.</p>
+{% endfor %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary">Comentar</button>
+</form>
+{% endblock %}
