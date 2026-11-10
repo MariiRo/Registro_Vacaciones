@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitudes{% endblock %}
+
+{% block content %}
+<h1>Solicitudes de vacaciones</h1>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-8">
+        <input class="form-control" type="text" name="q" value="{{ q }}" placeholder="Buscar por empleado">
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary w-100">Buscar</button>
+    </div>
+</form>
+
+<div class="row">
+    {% for solicitud in solicitudes %}
+        <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ solicitud.empleado.username }}</h5>
+                    <p class="card-text">
+                        {{ solicitud.tipo.nombre }}<br>
+                        {{ solicitud.fecha_inicio }} a {{ solicitud.fecha_fin }}<br>
+                        Estado: {{ solicitud.get_estado_display }}
+                    </p>
+                    <a class="btn btn-sm btn-primary" href="{% url 'vacaciones:detalle' solicitud.pk %}">Ver</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No hay solicitudes.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+
