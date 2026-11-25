@@ -44,7 +44,8 @@ class SolicitudVacaciones(models.Model):
             raise ValidationError("La fecha de fin no puede ser anterior a la fecha de inicio.")
 
     def __str__(self):
-        return f"{self.empleado.username} - {self.fecha_inicio} a {self.fecha_fin}"
+        nombre = self.empleado.get_full_name() or self.empleado.username
+        return f"{nombre} - {self.fecha_inicio} a {self.fecha_fin}"
 
 class ComentarioSolicitud(models.Model):
     solicitud = models.ForeignKey(
