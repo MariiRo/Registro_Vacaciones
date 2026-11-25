@@ -4,13 +4,17 @@
 
 {% block content %}
 <h1>Solicitudes de vacaciones</h1>
-
 <form method="get" class="row g-2 mb-3">
-    <div class="col-8">
+    <div class="col-6">
         <input class="form-control" type="text" name="q" value="{{ q }}" placeholder="Buscar por empleado">
     </div>
-    <div class="col-4">
+    <div class="col-3">
         <button class="btn btn-primary w-100">Buscar</button>
+    </div>
+    <div class="col-3">
+        <a class="btn btn-success w-100" href="{% url 'vacaciones:exportar_excel' %}{% if q %}?q={{ q }}{% endif %}">
+            Exportar a Excel
+        </a>
     </div>
 </form>
 

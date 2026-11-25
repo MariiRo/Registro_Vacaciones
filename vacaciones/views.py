@@ -2,6 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import SolicitudVacaciones
 from .forms import SolicitudVacacionesForm, ComentarioSolicitudForm
+from openpyxl import Workbook
+from openpyxl.styles import Font
+from django.http import HttpResponse
+
 
 @login_required
 def lista_solicitudes(request):
@@ -67,7 +71,40 @@ def eliminar_solicitud(request, pk):
 
     return render(request, "vacaciones/solicitud_confirm_delete.html", {"solicitud": solicitud})
 
+@login_required
+def exportar_excel(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Solicitudes"
 
+    headers = ["Empleado", "Tipo", "Fecha inicio", "Fecha fin", "Días", "Estado", "Motivo"]
+    for col, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col, value=header)
+        cell.font = Font(bold=True)
+
+    solicitudes = SolicitudVacaciones.objects.all().order_by("-fecha_solicitud")
+    q = request.GET.get("q", "")
+    if q:
+        solicitudes = solicitudes.filter(empleado__username__icontains=q)
+
+    for row, s in enumerate(solicitudes, 2):
+        ws.cell(row=row, column=1, value=s.empleado.username)
+        ws.cell(row=row, column=2, value=s.tipo.nombre)
+        ws.cell(row=row, column=3, value=s.fecha_inicio.strftime("%d/%m/%Y"))
+        ws.cell(row=row, column=4, value=s.fecha_fin.strftime("%d/%m/%Y"))
+        ws.cell(row=row, column=5, value=s.dias_totales())
+        ws.cell(row=row, column=6, value=s.get_estado_display())
+        ws.cell(row=row, column=7, value=s.motivo)
+
+    for col, width in enumerate([20, 20, 15, 15, 10, 15, 40], 1):
+        ws.column_dimensions[chr(64 + col)].width = width
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="solicitudes.xlsx"'
+    wb.save(response)
+    return response
 
 
 
