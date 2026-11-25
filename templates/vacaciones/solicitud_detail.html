@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Solicitud de {{ solicitud.empleado.username }}</h1>
+<h1>Solicitud de {{ solicitud.empleado.get_full_name|default:solicitud.empleado.username }}</h1>
 <p>Tipo: {{ solicitud.tipo.nombre }}</p>
 <p>Desde: {{ solicitud.fecha_inicio }}</p>
 <p>Hasta: {{ solicitud.fecha_fin }}</p>

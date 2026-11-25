@@ -23,7 +23,7 @@
         <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">{{ solicitud.empleado.username }}</h5>
+                    <h5 class="card-title">{{ solicitud.empleado.get_full_name|default:solicitud.empleado.username }}</h5>
                     <p class="card-text">
                         {{ solicitud.tipo.nombre }}<br>
                         {{ solicitud.fecha_inicio }} a {{ solicitud.fecha_fin }}<br>

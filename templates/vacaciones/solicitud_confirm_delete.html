@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Eliminar solicitud</h1>
-<p>¿Seguro que querés eliminar la solicitud de {{ solicitud.empleado.username }}?</p>
+<p>¿Seguro que querés eliminar la solicitud de {{ solicitud.empleado.get_full_name|default:solicitud.empleado.username }}?</p>
 <form method="post">
     {% csrf_token %}
     <button class="btn btn-danger">Eliminar</button>
